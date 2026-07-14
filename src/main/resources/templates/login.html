@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+    <form th:action="@{/login}" method="post">
+        <input type="text" name="username" placeholder="Account Number"/>
+        <input type="password" name="password" placeholder="PIN"/>
+        <button type="submit">Login</button>
+    </form>
+    <p th:if="${param.error}">Invalid account number or PIN.</p>
+    <p th:if="${param.logout}">You have been logged out.</p>
+</body>
+</html>
