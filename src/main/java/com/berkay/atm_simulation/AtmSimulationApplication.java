@@ -38,6 +38,23 @@ public class AtmSimulationApplication {
 				System.out.println("Account already exists.");
 			}
 
+			if(accountRepository.findByAccountNumber("admin").isEmpty()) {
+				// Create a dummy account if it doesn't exist already.
+				Account account = new Account();
+				account.setAccountNumber("admin");
+				account.setOwnerName("Berkay");
+				account.setRole(Role.ADMIN);
+				account.setBalance(BigDecimal.ZERO);
+				account.setPinHash(passwordEncoder.encode("admin"));
+
+				accountRepository.save(account);
+
+				System.out.println("Created new account for: " + account.getOwnerName());
+			}
+			else {
+				System.out.println("Account already exists.");
+			}
+
 		};
 	}
 }

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin</title>
+</head>
+<body>
+    <h1 th:text="'Welcome, ' + ${username}">Welcome</h1>
+
+    <table>
+        <tr><th>Account Number</th><th>Owner</th><th>Balance</th><th>Role</th><th>Locked</th></tr>
+        <tr th:each="account : ${accounts}">
+            <td th:text="${account.accountNumber}"></td>
+            <td th:text="${account.ownerName}"></td>
+            <td th:text="${account.balance}"></td>
+            <td th:text="${account.role}"></td>
+            <td th:text="${account.locked}"></td>
+            <td>
+                <form th:if="${account.locked}"
+                      th:action="@{/admin/accounts/{id}/unlock(id=${account.id})}"
+                      method="post">
+                    <button type="submit">Unlock</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+
+    <br/>
+    <p th:if="${message}" th:text="${message}"></p>
+    <p th:if="${error}" th:text="${error}"></p>
+    <form th:action="@{/admin/accounts}" th:object="${createAccountForm}" method="post">
+        <input type="text"     th:field="*{accountNumber}" placeholder="Account number"/>
+        <span th:errors="*{accountNumber}"></span>
+        <input type="text"     th:field="*{ownerName}"     placeholder="Owner name"/>
+        <span th:errors="*{ownerName}"></span>
+        <input type="password" th:field="*{pin}"           placeholder="4-digit PIN"/>
+        <span th:errors="*{pin}"></span>
+        <select th:field="*{role}">
+            <option th:each="r : ${roles}" th:value="${r}" th:text="${r}"></option>
+        </select>
+        <button type="submit">Create</button>
+    </form>
+</body>
+</html>
