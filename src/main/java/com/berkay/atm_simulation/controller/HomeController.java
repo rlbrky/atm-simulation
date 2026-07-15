@@ -75,4 +75,12 @@ public class HomeController {
 
         return "redirect:/";
     }
+
+    @GetMapping("/history")
+    public String transactionHistory(Principal principal, Model model) {
+        model.addAttribute("transactions",
+                accountService.getTransactionHistory(principal.getName()));
+
+        return "history";
+    }
 }

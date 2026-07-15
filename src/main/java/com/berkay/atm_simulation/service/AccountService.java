@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
 
 @Service
 public class AccountService {
@@ -68,5 +69,11 @@ public class AccountService {
         Transaction withdrawal = new Transaction(TransactionType.WITHDRAWAL, amount, Instant.now(), account);
         transactionRepository.save(withdrawal);
         accountRepository.save(account);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Transaction> getTransactionHistory(String accountNumber){
+        Account account = getAccountOrThrow(accountNumber);
+        return transactionRepository.findByAccountOrderByTimestampDesc(account);
     }
 }
