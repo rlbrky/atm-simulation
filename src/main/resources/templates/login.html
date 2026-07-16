@@ -9,6 +9,7 @@
                 <input type="password" name="password" placeholder="PIN"/>
                 <button type="submit">Login</button>
             </form>
+            <p class="error" th:if="${param.locked}">Your account is locked after too many failed attempts. Contact an administrator.</p>
             <p class="error" th:if="${param.error}">Invalid account number or PIN.</p>
             <p class="message" th:if="${param.logout}">You have been logged out.</p>
      </div>

@@ -1,5 +1,6 @@
 package com.berkay.atm_simulation.config;
 
+import com.berkay.atm_simulation.security.LoginFailureHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -12,6 +13,12 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 @Configuration
 public class SecurityConfig {
+
+    private final LoginFailureHandler failureHandler;
+
+    public SecurityConfig(LoginFailureHandler failureHandler) {
+        this.failureHandler = failureHandler;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -29,6 +36,7 @@ public class SecurityConfig {
                 //.formLogin(Customizer.withDefaults()) // spring default login page
                 .formLogin(form ->  form
                         .loginPage("/login")
+                        .failureHandler(failureHandler)
                         .permitAll()) // swap default login page with a custom one.
                 .logout(Customizer.withDefaults()); // /logout endpoint
 

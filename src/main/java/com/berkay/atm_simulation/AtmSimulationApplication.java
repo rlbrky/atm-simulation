@@ -3,6 +3,8 @@ package com.berkay.atm_simulation;
 import com.berkay.atm_simulation.model.Account;
 import com.berkay.atm_simulation.model.Role;
 import com.berkay.atm_simulation.repository.AccountRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,6 +15,8 @@ import java.math.BigDecimal;
 
 @SpringBootApplication
 public class AtmSimulationApplication {
+
+	private static final Logger log = LoggerFactory.getLogger(AtmSimulationApplication.class);
 
 	public static void main(String[] args) {
 		SpringApplication.run(AtmSimulationApplication.class, args);
@@ -32,10 +36,10 @@ public class AtmSimulationApplication {
 
 				accountRepository.save(account);
 
-				System.out.println("Created new account for: " + account.getOwnerName());
+                log.info("Created new account for: {}", account.getOwnerName());
 			}
 			else {
-				System.out.println("Account already exists.");
+				log.info("Account already exists.");
 			}
 
 			if(accountRepository.findByAccountNumber("admin").isEmpty()) {
@@ -49,10 +53,10 @@ public class AtmSimulationApplication {
 
 				accountRepository.save(account);
 
-				System.out.println("Created new account for: " + account.getOwnerName());
+				log.info("Created new account for: {}", account.getOwnerName());
 			}
 			else {
-				System.out.println("Account already exists.");
+				log.info("Account already exists.");
 			}
 
 		};

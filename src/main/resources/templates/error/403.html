@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/nav :: head('Permission Denied')}"></head>
+<body>
+<div class="container">
+    <div class="error-page card">
+        <p class="error-code">403</p>
+        <h1 class="error-title">No Permission</h1>
+        <p class="error-detail">You don't have permission to view this page.</p>
+        <a class="button-link" th:href="@{/}">Back to dashboard</a>
+    </div>
+</div>
+</body>
+</html>

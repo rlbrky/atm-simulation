@@ -20,8 +20,9 @@ public class CurrentUserAdvice {
     public void addCurrentUser(Principal principal, Model model) {
         if(principal == null) return;
 
-        Account me = accountService.getAccountOrThrow(principal.getName());
-        model.addAttribute("username", principal.getName());
-        model.addAttribute("ownerName", me.getOwnerName());
+        accountService.findAccount(principal.getName()).ifPresent(me -> {
+            model.addAttribute("username", principal.getName());
+            model.addAttribute("ownerName", me.getOwnerName());
+        });
     }
 }

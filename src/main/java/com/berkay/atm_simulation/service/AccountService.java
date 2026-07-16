@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AccountService {
@@ -27,6 +28,10 @@ public class AccountService {
         return accountRepository.findByAccountNumber(accountNumber).orElseThrow(
                 () -> new IllegalArgumentException("Account not found: " + accountNumber)
         );
+    }
+
+    public Optional<Account> findAccount(String accountNumber) {
+        return accountRepository.findByAccountNumber(accountNumber);
     }
 
     @Transactional(readOnly = true)

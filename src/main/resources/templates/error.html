@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/nav :: head('Error')}"></head>
+<body>
+<div class="container">
+    <div class="error-page card">
+        <h1 class="error-title">Something Went Wrong</h1>
+        <p class="error-detail">An error occurred, we can't show you this page at this moment.</p>
+        <p class="error-detail" th:if="${message}" th:text="${message}"></p>
+        <a class="button-link" th:href="@{/}">Back to dashboard</a>
+    </div>
+</div>
+</body>
+</html>
