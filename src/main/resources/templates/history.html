@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>History</title>
-</head>
+<head th:replace="~{fragments/nav :: head('History')}"></head>
+
 <body>
-    <p th:if="${#lists.isEmpty(transactions)}">No transactions yet.</p>
-    <table>
-        <tr><th>Type</th><th>Amount</th><th>Date</th></tr>
-        <tr th:each="tx : ${transactions}">
-            <td th:text="${tx.type}"></td>
-            <td th:text="${tx.amount}"></td>
-            <td th:text="${tx.timestamp}"></td>
-        </tr>
-    </table>
+    <nav th:replace="~{fragments/nav :: navbar}"></nav>
+
+    <div class="container">
+        <p class="message" th:if="${#lists.isEmpty(transactions)}">No transactions yet.</p>
+        <table>
+            <tr><th>Type</th><th>Amount</th><th>Date</th></tr>
+            <tr th:each="tx : ${transactions}">
+                <td th:text="${tx.type}"></td>
+                <td th:text="'$' + ${#numbers.formatDecimal(tx.amount, 1, 'COMMA', 2, 'POINT')}"></td>
+                <!-- tx.timestamp.atZone(T(java.time.ZoneId).systemDefault()) turns the Instant into a ZonedDateTime in server's local zone -->
+                <td th:text="${#temporals.format(tx.timestamp.atZone(T(java.time.ZoneId).systemDefault()), 'dd MMM yyyy, HH:mm')}"></td>
+            </tr>
+        </table>
+    </div>
 </body>
 </html>

@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.security.Principal;
-
 @Controller
 public class AdminController {
 
@@ -24,8 +22,7 @@ public class AdminController {
     }
 
     @GetMapping("/admin/accounts")
-    public String accounts(Model model, Principal principal) {
-        model.addAttribute("username", principal.getName());
+    public String accounts(Model model) {
         model.addAttribute("accounts", adminService.listAccounts());
         model.addAttribute("createAccountForm", new CreateAccountForm());
         model.addAttribute("roles", Role.values());
@@ -45,10 +42,15 @@ public class AdminController {
     @PostMapping("/admin/accounts")
     public String createAccount(@Valid @ModelAttribute("createAccountForm") CreateAccountForm createAccountForm,
                                 BindingResult result,
+                                Model model,
                                 RedirectAttributes ra) {
         if(result.hasErrors()) {
-            ra.addFlashAttribute("error", "Please enter valid data for your account");
-            return "redirect:/admin/accounts";
+            // Repopulate model
+            model.addAttribute("accounts", adminService.listAccounts());
+            model.addAttribute("roles", Role.values());
+
+            // Don't redirect because we are flashing error messages using binding result (redirect creates new request which causes our binding result to disappear)
+            return "admin/accounts";
         }
 
         try {
@@ -62,6 +64,13 @@ public class AdminController {
             ra.addFlashAttribute("error", e.getMessage());
         }
 
+        return "redirect:/admin/accounts";
+    }
+
+    @PostMapping("/admin/accounts/{id}/delete")
+    public String delete(@PathVariable Long id, RedirectAttributes ra) {
+        adminService.deleteAccount(id);
+        ra.addFlashAttribute("message", "Account deleted successfully");
         return "redirect:/admin/accounts";
     }
 }

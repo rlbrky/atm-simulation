@@ -23,7 +23,7 @@ public class AccountService {
         this.transactionRepository = transactionRepository;
     }
 
-    private Account getAccountOrThrow(String accountNumber) {
+    public Account getAccountOrThrow(String accountNumber) {
         return accountRepository.findByAccountNumber(accountNumber).orElseThrow(
                 () -> new IllegalArgumentException("Account not found: " + accountNumber)
         );

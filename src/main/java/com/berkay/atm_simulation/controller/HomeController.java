@@ -24,7 +24,6 @@ public class HomeController {
     @GetMapping("/")
     public String home(Principal principal, Model model) {
         // principal is the logged user, spring injects it.
-        model.addAttribute("username", principal.getName());
         model.addAttribute("balance", accountService.getBalance(principal.getName()));
         model.addAttribute("amountForm", new AmountForm());
 

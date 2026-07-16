@@ -1,44 +1,54 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Admin</title>
-</head>
+<head th:replace="~{fragments/nav :: head('Accounts')}"></head>
+
 <body>
-    <h1 th:text="'Welcome, ' + ${username}">Welcome</h1>
+    <nav th:replace="~{fragments/nav :: navbar}"></nav>
 
-    <table>
-        <tr><th>Account Number</th><th>Owner</th><th>Balance</th><th>Role</th><th>Locked</th></tr>
-        <tr th:each="account : ${accounts}">
-            <td th:text="${account.accountNumber}"></td>
-            <td th:text="${account.ownerName}"></td>
-            <td th:text="${account.balance}"></td>
-            <td th:text="${account.role}"></td>
-            <td th:text="${account.locked}"></td>
-            <td>
-                <form th:if="${account.locked}"
-                      th:action="@{/admin/accounts/{id}/unlock(id=${account.id})}"
-                      method="post">
-                    <button type="submit">Unlock</button>
-                </form>
-            </td>
-        </tr>
-    </table>
+    <div class="container">
+        <h1 th:text="'Welcome, ' + ${ownerName}">Welcome</h1>
 
-    <br/>
-    <p th:if="${message}" th:text="${message}"></p>
-    <p th:if="${error}" th:text="${error}"></p>
-    <form th:action="@{/admin/accounts}" th:object="${createAccountForm}" method="post">
-        <input type="text"     th:field="*{accountNumber}" placeholder="Account number"/>
-        <span th:errors="*{accountNumber}"></span>
-        <input type="text"     th:field="*{ownerName}"     placeholder="Owner name"/>
-        <span th:errors="*{ownerName}"></span>
-        <input type="password" th:field="*{pin}"           placeholder="4-digit PIN"/>
-        <span th:errors="*{pin}"></span>
-        <select th:field="*{role}">
-            <option th:each="r : ${roles}" th:value="${r}" th:text="${r}"></option>
-        </select>
-        <button type="submit">Create</button>
-    </form>
+        <table>
+            <tr><th>Account Number</th><th>Owner</th><th>Balance</th><th>Role</th><th>Locked</th></tr>
+            <tr th:each="account : ${accounts}">
+                <td th:text="${account.accountNumber}"></td>
+                <td th:text="${account.ownerName}"></td>
+                <td th:text="'$' + ${#numbers.formatDecimal(account.balance, 1, 'COMMA', 2, 'POINT')}"></td>
+                <td th:text="${account.role}"></td>
+                <td th:text="${account.locked}"></td>
+                <td>
+                    <form th:if="${account.locked}"
+                          th:action="@{/admin/accounts/{id}/unlock(id=${account.id})}"
+                          method="post">
+                        <button type="submit">Unlock</button>
+                    </form>
+                </td>
+                <td>
+                    <form th:if="${account.accountNumber != username}"
+                          th:action="@{/admin/accounts/{id}/delete(id=${account.id})}"
+                          method="post">
+                        <button class="delete" type="submit" onclick="return confirm('Delete this account and all its transactions ?')">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        </table>
+
+        <br/>
+        <p class="message" th:if="${message}" th:text="${message}"></p>
+        <p class="error" th:if="${error}" th:text="${error}"></p>
+        <form class="stacked-form" th:action="@{/admin/accounts}" th:object="${createAccountForm}" method="post">
+            <span class="field-error" th:errors="*{accountNumber}"></span>
+            <input type="text"     th:field="*{accountNumber}" placeholder="Account number"/>
+            <span class="field-error" th:errors="*{ownerName}"></span>
+            <input type="text"     th:field="*{ownerName}"     placeholder="Owner name"/>
+            <span class="field-error" th:errors="*{pin}"></span>
+            <input type="password" th:field="*{pin}"           placeholder="4-digit PIN"/>
+            <span class="field-error" th:errors="*{role}"></span>
+            <select th:field="*{role}">
+                <option th:each="r : ${roles}" th:value="${r}" th:text="${r}"></option>
+            </select>
+            <button type="submit">Create</button>
+        </form>
+    </div>
 </body>
 </html>

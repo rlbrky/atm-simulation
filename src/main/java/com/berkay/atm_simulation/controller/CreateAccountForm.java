@@ -6,14 +6,15 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 public class CreateAccountForm {
-    @NotBlank private String accountNumber;
+    @NotBlank(message = "Account number is required")
+    private String accountNumber;
 
-    @NotBlank
+    @NotBlank(message = "Owner name is required")
     private String ownerName;
-    @NotBlank
+    @NotBlank(message = "PIN is required")
     @Pattern(regexp = "\\d{4}", message = "PIN must be exactly 4 digits")
     private String pin;
-    @NotNull
+    @NotNull(message = "Please select a role")
     private Role role;
 
     public String getAccountNumber() {
