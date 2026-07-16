@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 
+@Profile("dev")
 @Component
 public class DataSeeder implements CommandLineRunner {
 
