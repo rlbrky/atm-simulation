@@ -20,6 +20,8 @@
 - Balance on home page, deposits, withdrawals
 - Transaction history (newest first)
 - Admin module: list, create, unlock, and delete accounts
+- Friendly error pages (403/404/500)
+- Audit logging of failed login attempts
 
 ## Security & correctness highlights
 - PINs hashed with **BCrypt** (never stored in plaintext)
@@ -50,5 +52,27 @@ Set `ATM_DB_PASSWORD=your-password` in your environment (or your IDE's run confi
 ```
 Then open http://localhost:8080
 
+### 4. Log in
+The app seeds two demo accounts on first run:
+
+| Account number | PIN    | Role  |
+|----------------|--------|-------|
+| `admin`        | `admin`| ADMIN |
+| `123456789`    | `1234` | USER  |
+
+(Seed data for local development — not intended for real deployment.)
+
+## Testing
+Run the suite with `./mvnw test`. It covers:
+- **Service unit tests** (JUnit 5 + Mockito) for the money rules — deposits/withdrawals reject non-positive amounts and overdrafts, with explicit boundary cases (zero, exact-balance withdrawal).
+- **Security slice tests** (`@WebMvcTest` + Spring Security Test) verifying role-based access on the admin routes: anonymous → redirect to login, USER → 403, ADMIN → 200.
+
 ## Architecture
 - controller → service (@Transactional business logic) → repository (Spring Data) → MySQL, with Spring Security's filter chain in front and a UserDetailsService bridging accounts to authentication.
+
+## Possible improvements
+- **Soft-delete accounts** instead of hard-deleting — a real system archives financial records rather than destroying them.
+- **Generic auth messages** — the "account locked" message confirms an account exists (enables enumeration); production might trade that UX for less information leakage.
+- **Versioned DB migrations** (Flyway/Liquibase) instead of `ddl-auto=update`.
+- **Proper HTTP status codes** from the exception handlers (`@ResponseStatus`).
+- Denomination-based withdrawals (multiples of available notes).
